@@ -33,9 +33,12 @@ export const getUserById = async (req: Request, res: Response, next:NextFunction
   }
 };
 
-export const updateUserStatus = async (req: Request, res: Response, next:NextFunction) => {
+export const updateUser = async (req: Request, res: Response, next:NextFunction) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    const {name, email, phone, idType, idNumber, status, address, note} = req.body;
+    const user = await User.findByIdAndUpdate(req.params.id, 
+      { name, email, phone, idType, idNumber, status, address, note}, 
+      { new: true });
     if(!user){
       return next(new ErrorHandler("No User Found", 404));
     }

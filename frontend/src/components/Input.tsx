@@ -57,7 +57,7 @@ const Input: React.FC<InputProps> = ({
         fullWidth && "w-full",
         error || localError
           ? "border-red-500 focus-within:ring-red-500"
-          : "border-gray-300 focus-within:ring-blue-500",
+          : "border-gray-800 focus-within:ring-blue-500",
         "focus-within:ring-1",
         className
       )}

@@ -1,71 +1,129 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import Button from "../../components/Button";
 import Table from "../../components/Table";
 import { Pencil, Trash2 } from "lucide-react";
-
-/* ---------- row type ---------- */
-type PropertyRow = {
-  id: number;
-  name: string;
-  address: string;
-  remarks: string;
-  updatedOn: string;
-  updatedBy: string;
-};
+import axios from "axios";
+import toast from "react-hot-toast";
+import type { IUser } from "../../interfaces/userInterface";
+import TenantModal from "../../components/TenantModal";
 
 /* ---------- column defs ---------- */
-const columns: ColumnDef<PropertyRow>[] = [
+const columns: ColumnDef<IUser>[] = [
   { header: "#", cell: info => info.row.index + 1 },
-  { accessorKey: "name", header: "No/Name" },
-  { accessorKey: "phone", header: "Phone" },
+  { accessorKey: "name", header: "Name" },
   { accessorKey: "email", header: "Email" },
+  { accessorKey: "phone", header: "Phone" },
+  { accessorKey: "idType", header: "IdType" },
+  { accessorKey: "idNumber", header: "IdNumber" },
   { accessorKey: "status", header: "Status" },
-  { accessorKey: "idType", header: "Id Type" },
-  { accessorKey: "idNumber", header: "Id Number" },
-  { accessorKey: "room", header: "Room" },
-  { accessorKey: "property", header: "Property" },
+  { accessorKey: "address", header: "Address" },
+  { accessorKey: "note", header: "Remark" },
+  { accessorKey: "assignedRoom", header: "Room Assigned" },
 
 ];
-const data = [
-    {
-        name:"45",
-        phone:"4097897897",
-        email:"dfjld@gmail.com",
-        status:"available",
-        idType:"aadhar",
-        idNumber:"203578723088",
-        room:"879",
-        property:"taj hotel",
-        
-    }
-]
+
 const TenantPage: React.FC = () => {
-  /* replace with real data fetching (react‑query, SWR, etc.) */
-//   const [data, setData] = useState<PropertyRow[]>([]);
 
-  const onEdit = (row: PropertyRow) => {
-    /* TODO: navigate to edit screen or open modal */
-    console.log("edit", row.id);
+  const [tenants, setTenants] = useState<IUser[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [selected, setSelected] = useState<IUser | null>(null);
+
+  console.log(tenants)
+  /* ---------- fetch ---------- */
+  const fetchTenants = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/tenants`, {
+        withCredentials: true,
+      });
+      if (!res.data.success) {
+        toast.error(res.data.message);
+        return;
+      }
+      setTenants(res.data.tenants);
+    } catch (err: any) {
+      console.error("Fetch error:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onRemove = (row: PropertyRow) => {
-    /* TODO: confirmation + delete request */
-    console.log("remove", row.id);
+  /* ---------- remove ---------- */
+  const onRemove = async (tenant: IUser) => {
+
+    if(!window.confirm("Do You want to delete this Tenant?")){
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/user/${tenant._id}`,
+        { withCredentials: true }
+      );
+      if (!res.data.success) {
+        toast.error("Tenant delete failed");
+        return;
+      }
+      setTenants((prev) => prev.filter((p) => p._id !== tenant._id));
+      toast.success("Tenant deleted");
+    } catch (err) {
+      console.error("Delete failed:", err);
+      toast.error("An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  /* ---------- edit ---------- */
+  const onEdit = (row: IUser) => {
+    setSelected(row);
+    setEditModal(true);
+  };
+
+  useEffect(() => {
+    fetchTenants();
+  }, []);
 
   return (
     <div className="flex flex-col gap-4">
       {/* header */}
       <div className="flex justify-between items-center">
         <span className="text-2xl font-semibold text-blue-500">Tenants</span>
-        <Button>Add Tenant +</Button>
+        <Button onClick={() => setAddModal(true)} disabled={loading}>
+          Add Tenant +
+        </Button>
       </div>
 
+      {/* create modal */}
+      {addModal && (
+        <TenantModal
+          mode="create"
+          onClose={() => setAddModal(false)}
+          setTenants={setTenants}
+        />
+      )}
+
+      {/* edit modal */}
+      {editModal && selected && (
+        <TenantModal
+          mode="edit"
+          tenant={selected}
+          onClose={() => {
+            setEditModal(false);
+            setSelected(null);
+          }}
+          setTenants={setTenants}
+        />
+      )}
+
       {/* table */}
-      <Table<PropertyRow>
+      <Table<IUser>
         columns={columns}
-        data={data}
+        data={tenants}
         renderRowActions={row => (
           <div className="flex gap-1">
             <button

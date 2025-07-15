@@ -2,6 +2,7 @@ import type { IProperty } from "./propertyInterface";
 import type { IUser } from "./userInterface";
 
 export interface IRoom extends Document {
+    _id:string,
     propertyId: IProperty;
     roomNumber: string;
     type: "single" | "double" | "deluxe";

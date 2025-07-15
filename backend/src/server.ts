@@ -5,7 +5,10 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import connectDB from "./config/mongoConfig";
 import errorMiddleware from './middleware/error'
-import authRouter from './routes/auth.route'
+import userRouter from './routes/user.route'
+import roomRouter from './routes/room.route'
+import propertyRouter from './routes/property.route'
+import bookingRouter from './routes/booking.route'
 import rateLimit from 'express-rate-limit'
 
 let server: ReturnType<typeof app.listen>;
@@ -47,8 +50,6 @@ app.use(rateLimit({
   })); // Rate limiting
 
 
-
-
 // health check route -->
 app.get('/',(req:Request, res:Response)=>{
     res.json({
@@ -56,7 +57,10 @@ app.get('/',(req:Request, res:Response)=>{
     })
 })
 // routes -->
-app.use('/api/v1/auth',authRouter);
+app.use('/api/v1/user',userRouter);
+app.use('/api/v1/property',propertyRouter);
+app.use('/api/v1/room',roomRouter);
+app.use('/api/v1/booking',bookingRouter);
 
 
 app.use(errorMiddleware)  // error middleware

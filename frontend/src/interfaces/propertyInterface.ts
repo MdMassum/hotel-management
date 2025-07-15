@@ -1,7 +1,7 @@
 import type { IUser } from "./userInterface";
 
 export interface IProperty {
-    _id: number;
+    _id: string;
     name: string;
     location: string;
     description: string;

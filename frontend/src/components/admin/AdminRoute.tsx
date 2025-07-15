@@ -13,7 +13,7 @@ const AdminRoute = () => {
   }, [currentUser]);
 
   if (!currentUser) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   return currentUser.role === 'admin' ? <Outlet /> : <p className='flex mt-20 justify-center items-center'>Only Admin Can Access This Page!!</p>;

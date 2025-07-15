@@ -45,7 +45,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     // Find user and validate password
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).select("+password")
+    console.log("user8",user)
     if (!user) {
       return next(new ErrorHandler("Invalid username or password", 401));
     }

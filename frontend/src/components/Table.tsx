@@ -10,7 +10,7 @@ import {
   import * as XLSX from "xlsx";
   import Papa from "papaparse";
   import { saveAs } from "file-saver";
-import ToolbarButton from "./ToolBarButton";
+import ToolbarButton from "./ToolbarButton";
   
   export interface AdminTableProps<TData extends object> {
     /** Column definitions (TanStack’s typed ColumnDef) */
@@ -125,8 +125,11 @@ import ToolbarButton from "./ToolBarButton";
                 <tr key={row.id} className="bg-white hover:bg-gray-50">
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id} className="px-4 py-2">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
+                    {(() => {
+                      const value = flexRender(cell.column.columnDef.cell, cell.getContext());
+                      return value === null || value === undefined || value === " " ? "NA" : value;
+                    })()}
+                  </td>
                   ))}
                   {renderRowActions && (
                     <td className="px-4 py-2">{renderRowActions(row.original)}</td>

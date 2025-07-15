@@ -35,7 +35,7 @@ const AdminSidebar = () => {
   const handleLogout = async () => {
     try {
       dispatch(signOutStart());
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/logout`, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/logout`,{},{ withCredentials: true });
       if (response.data.success === false) {
         dispatch(signOutFailure(response.data.message));
         toast.error(response.data.message);
@@ -47,13 +47,13 @@ const AdminSidebar = () => {
       navigate('/');
     } catch (error : any) {
       console.log(error);
-      dispatch(signOutFailure(error.message));
-      toast.error(error.message);
+      dispatch(signOutFailure(error.response.data.message));
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
 
   return (
-    <div className="fixed flex flex-col absolute left-0 top-14 h-[90vh] items-center text-lg shadow-2xl pb-4 z-50 max-w-[16rem] bg-gray-200 mr-56 z-30">
+    <div className="fixed flex flex-col left-0 top-14 h-[90vh] items-center text-lg shadow-2xl pb-4 max-w-[16rem] bg-gray-200 mr-56 z-30">
 
     <div className="h-32 flex justify-center items-center gap-2 ">
       <h1 className="text-gray-700 text-2xl font-bold mb-3">Admin</h1>

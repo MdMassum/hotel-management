@@ -14,6 +14,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Login: React.FC = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -33,7 +34,7 @@ const Login: React.FC = () => {
       dispatch(signInStart());
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/auth//login`,
+        `${import.meta.env.VITE_BASE_URL}/user/login`,
         {
           email,
           password,
@@ -49,7 +50,7 @@ const Login: React.FC = () => {
       dispatch(signInSuccess(response.data.user));
       console.log("Login Success:", response.data);
       toast.success("Login Success");
-      navigate("/home");
+      navigate("/dashboard");
     } catch (err: any) {
       console.error("Login Error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || "An error occurred");

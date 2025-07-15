@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => {
   React.useEffect(() => {
     if (time <= 0){
       if(currentUser){
-        navigate("/home")
+        navigate("/dashboard")
       }
       else{
         navigate("/");

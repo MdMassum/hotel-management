@@ -18,10 +18,11 @@ export const createProperty = async (req: Request, res: Response, next:NextFunct
   }
 };
 
+
 export const getAllProperties = async (_req: Request, res: Response, next:NextFunction) => {
   try {
 
-    const properties = await Property.find();
+    const properties = await Property.find().populate("createdBy");
     res.status(200).json({
       success:true,
       properties
@@ -31,6 +32,7 @@ export const getAllProperties = async (_req: Request, res: Response, next:NextFu
     return next(new ErrorHandler(error.message || "Internal server error", 500));
   }
 };
+
 
 export const getPropertyById = async (req: Request, res: Response, next:NextFunction) => {
   try {
@@ -47,6 +49,30 @@ export const getPropertyById = async (req: Request, res: Response, next:NextFunc
     return next(new ErrorHandler(error.message || "Internal server error", 500));
   }
 };
+
+
+export const updateProperty = async (req: Request, res: Response, next:NextFunction) => {
+
+  const {name, location, description} = req.body;
+  try {
+    const property = await Property.findByIdAndUpdate(req.params.id,
+      {name, location, description},
+      { new: true }
+    );
+    if(!property){
+      return next(new ErrorHandler("No Property Found", 404));
+    }
+
+    res.status(200).json({
+      success:true,
+      property
+    });
+
+  } catch (error:any) {
+    return next(new ErrorHandler(error.message || "Internal server error", 500));
+  }
+};
+
 
 export const deleteProperty = async (req: Request, res: Response, next:NextFunction) => {
   try {

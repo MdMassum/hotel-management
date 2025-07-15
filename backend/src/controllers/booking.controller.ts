@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Booking from "../models/Booking";
-import Room from "../models/Room";
-import User from "../models/User";
+import Booking from "../models/booking.model";
+import Room from "../models/room.model";
+import User from "../models/user.model";
 
 export const createBooking = async (req: Request, res: Response) => {
   try {
@@ -20,7 +20,7 @@ export const createBooking = async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(tenantId, { assignedRoom: roomId, status: "active" });
 
     res.status(201).json(booking);
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -29,7 +29,7 @@ export const getAllBookings = async (_req: Request, res: Response) => {
   try {
     const bookings = await Booking.find().populate("propertyId roomId tenantId");
     res.json(bookings);
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -38,7 +38,7 @@ export const getBookingById = async (req: Request, res: Response) => {
   try {
     const booking = await Booking.findById(req.params.id).populate("propertyId roomId tenantId");
     res.json(booking);
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -58,7 +58,7 @@ export const checkOutBooking = async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(booking.tenantId, { assignedRoom: null, status: "inactive" });
 
     res.json(booking);
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -77,7 +77,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(booking.tenantId, { assignedRoom: null, status: "inactive" });
 
     res.json(booking);
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: error.message });
   }
 };
