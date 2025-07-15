@@ -4,7 +4,7 @@ import {
     getSortedRowModel,
     useReactTable,
   } from "@tanstack/react-table";
-  import type { ColumnDef } from "@tanstack/react-table";
+  import type { ColumnDef, SortingState } from "@tanstack/react-table";
   import { useState } from "react";
   import { FileText, ClipboardCopy, Printer, Download } from "lucide-react";
   import * as XLSX from "xlsx";
@@ -32,7 +32,7 @@ import ToolbarButton from "./ToolbarButton";
     enableExport = true,
     className = "",
   }: AdminTableProps<TData>) {
-    const [sorting, setSorting] = useState([]);
+    const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
   
     const table = useReactTable({

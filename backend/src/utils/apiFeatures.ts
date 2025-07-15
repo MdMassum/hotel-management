@@ -1,5 +1,4 @@
 import { Document, FilterQuery, Query } from "mongoose";
-import { IProduct } from "../models/product.model";
 
 interface QueryString {
   keyword?: string;
@@ -40,7 +39,7 @@ class ApiFeatures {
     let queryStr = JSON.stringify(queryCopy);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
-    const parsedFilter: FilterQuery<IProduct> = JSON.parse(queryStr);
+    const parsedFilter: FilterQuery<any> = JSON.parse(queryStr);
     this.query = this.query.find(parsedFilter);
 
     return this;

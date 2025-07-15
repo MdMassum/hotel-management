@@ -90,7 +90,7 @@ const TenantModal: React.FC<Props> = ({
       address,
       note,
       ...(password && { password }),
-      ...(assignedRoomId && { assignedRoom: assignedRoomId }),
+      ...(assignedRoomId && { assignedRoom: assignedRoomId as unknown as IRoom }),
     };
 
     try {

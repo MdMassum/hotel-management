@@ -12,5 +12,5 @@ export interface IUser {
     status: "active" | "inactive"; 
     address?: string;
     note?: string;
-    assignedRoom?: IRoom;
+    assignedRoom?: IRoom
   }

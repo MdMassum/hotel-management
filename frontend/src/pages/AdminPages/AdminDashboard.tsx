@@ -1,40 +1,31 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import StatCard from "../../components/admin/Card";
 import { Building2, Users2 } from "lucide-react";
 
-export interface Note {
-  _id: string;
-  title: string;
-  content: string;
-  completed: boolean;
-}
 
 const AdminDashboard: React.FC = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const fetchNotes = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/notes`,
-        { withCredentials: true }
-      );
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(
+  //       `${import.meta.env.VITE_BASE_URL}/notes`,
+  //       { withCredentials: true }
+  //     );
 
-      setNotes(res.data.notes);
-    } catch (err) {
-      console.error("Failed to fetch notes", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setNotes(res.data.notes);
+  //   } catch (err) {
+  //     console.error("Failed to fetch notes", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const date = new Date();
   const today = date.toISOString()
 
   useEffect(() => {
-    fetchNotes();
+    // fetchData();
   }, []);
 
   return (
